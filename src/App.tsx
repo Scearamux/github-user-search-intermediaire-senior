@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { GithubUser, GithubSearchResponse } from "./types/github";
+import UserCard from "./components/UserCard";
 import "./App.css";
 
 function App() {
@@ -75,11 +76,11 @@ function App() {
       {!isLoading && !error && query.trim() !== "" && users.length === 0 && (
         <p>Aucun résultat trouvé.</p>
       )}
-      <ul>
+      <div className="user-grid">
         {users.map((user) => (
-          <li key={user.id}>{user.login}</li>
+          <UserCard key={user.id} user={user} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
