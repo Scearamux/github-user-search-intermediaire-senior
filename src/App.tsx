@@ -36,6 +36,31 @@ function App() {
     }
   };
 
+  const duplicateSelected = () => {
+    setUsers((prevUsers) => {
+      const usersToDuplicate = prevUsers.filter((user) =>
+        selectedIds.has(user.id),
+      );
+
+      const duplicatedUsers = usersToDuplicate.map((user) => ({
+        ...user,
+        id: Date.now() + Math.random(),
+      }));
+
+      return [...prevUsers, ...duplicatedUsers];
+    });
+
+    setSelectedIds(new Set());
+  };
+
+  const deleteSelected = () => {
+    setUsers((prevUsers) =>
+      prevUsers.filter((user) => !selectedIds.has(user.id)),
+    );
+
+    setSelectedIds(new Set());
+  };
+
   useEffect(() => {
     setSelectedIds(new Set());
 
@@ -110,6 +135,25 @@ function App() {
           />
           {selectedIds.size} elements selected
         </label>
+
+        <div className="selection-bar__actions">
+          <button
+            type="button"
+            onClick={duplicateSelected}
+            disabled={selectedIds.size === 0}
+            aria-label="Dupliquer la sélection"
+          >
+            ⧉
+          </button>
+          <button
+            type="button"
+            onClick={deleteSelected}
+            disabled={selectedIds.size === 0}
+            aria-label="Supprimer la sélection"
+          >
+            🗑
+          </button>
+        </div>
       </div>
       <div className="user-grid">
         {users.map((user) => (

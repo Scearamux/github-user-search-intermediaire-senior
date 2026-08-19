@@ -22,7 +22,7 @@ function UserCard({ user, isSelected, onToggleSelect }: UserCardProps) {
         alt={`Avatar de ${user.login}`}
         className="user-card__avatar"
       />
-      <p className="user-card__id">{user.id}</p>
+      <p className="user-card__id">{Math.floor(user.id)}</p>
       <p className="user-card__login">{user.login}</p>
       <a
         href={user.html_url}
