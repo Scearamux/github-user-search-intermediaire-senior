@@ -8,12 +8,37 @@ function App() {
   const [users, setUsers] = useState<GithubUser[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      const newSelectedIds = new Set(prevSelectedIds);
+      if (newSelectedIds.has(id)) {
+        newSelectedIds.delete(id);
+      } else {
+        newSelectedIds.add(id);
+      }
+      return newSelectedIds;
+    });
+  };
+
+  const areAllSelected = users.length > 0 && selectedIds.size === users.length;
+
+  const toggleSelectAll = () => {
+    if (areAllSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(users.map((user) => user.id)));
+    }
+  };
+
   useEffect(() => {
+    setSelectedIds(new Set());
+
     if (query.trim() === "") {
       setUsers([]);
       setError("");
@@ -54,7 +79,7 @@ function App() {
         .finally(() => {
           setIsLoading(false);
         });
-    }, 300);
+    }, 400);
 
     return () => {
       clearTimeout(timeoutId);
@@ -76,9 +101,24 @@ function App() {
       {!isLoading && !error && query.trim() !== "" && users.length === 0 && (
         <p>Aucun résultat trouvé.</p>
       )}
+      <div className="selection-bar">
+        <label>
+          <input
+            type="checkbox"
+            checked={areAllSelected}
+            onChange={toggleSelectAll}
+          />
+          {selectedIds.size} elements selected
+        </label>
+      </div>
       <div className="user-grid">
         {users.map((user) => (
-          <UserCard key={user.id} user={user} />
+          <UserCard
+            key={user.id}
+            user={user}
+            isSelected={selectedIds.has(user.id)}
+            onToggleSelect={toggleSelect}
+          />
         ))}
       </div>
     </div>

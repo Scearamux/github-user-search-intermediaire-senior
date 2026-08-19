@@ -3,14 +3,23 @@ import "./UserCard.css";
 
 interface UserCardProps {
   user: GithubUser;
+  isSelected: boolean;
+  onToggleSelect: (id: number) => void;
 }
 
-function UserCard({ user }: UserCardProps) {
+function UserCard({ user, isSelected, onToggleSelect }: UserCardProps) {
   return (
     <div className="user-card">
+      <input
+        type="checkbox"
+        checked={isSelected}
+        onChange={() => onToggleSelect(user.id)}
+        aria-label={`Sélectionner ${user.login}`}
+        className="user-card__checkbox"
+      />
       <img
         src={user.avatar_url}
-        alt="{`Avatar de ${user.login}`}"
+        alt={`Avatar de ${user.login}`}
         className="user-card__avatar"
       />
       <p className="user-card__id">{user.id}</p>
