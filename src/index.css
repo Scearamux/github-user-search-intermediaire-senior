@@ -8,6 +8,10 @@ html,
 body {
   height: 100%;
   overflow: hidden;
+  /* Adjust the page to not inherit the dark theme*/
+  background: #ffffff;
+  color: #222222;
+  color-scheme: light;
   font-family:
     system-ui,
     -apple-system,

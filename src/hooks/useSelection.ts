@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import type { GithubUser } from "../types/github";
 
+// Handling multiple selections.
+// Use `Set` instead of an array for O(1) operations
+//during rendering and to ensure that IDs are unique
+
 export function useSelection(users: GithubUser[], query: string) {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
+  // reset when the query changes to prevent actions on obsolete elements during the search debounce
   useEffect(() => {
     setSelectedIds(new Set());
   }, [query]);
 
+  // Copy of the set required to force React to re-render
   const toggleSelect = (id: number) => {
     setSelectedIds((prevSelectedIds) => {
       const newSelectedIds = new Set(prevSelectedIds);
@@ -20,6 +26,7 @@ export function useSelection(users: GithubUser[], query: string) {
     });
   };
 
+  // Prevents validating selectAll if the list is empty
   const areAllSelected = users.length > 0 && selectedIds.size === users.length;
 
   const toggleSelectAll = () => {

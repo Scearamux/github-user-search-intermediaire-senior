@@ -7,6 +7,7 @@ import SelectionBar from "./components/SelectionBar";
 import UserGrid from "./components/UserGrid";
 import "./App.css";
 
+// The main orchestrator synchronizes the selection and the list (duplication/deletion) without linking the hooks to each other
 function App() {
   const [query, setQuery] = useState<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -24,6 +25,7 @@ function App() {
     setQuery(event.target.value);
   };
 
+  // Resets the selection on toggle to prevent hidden states
   const toggleEditMode = () => {
     setIsEditMode((prevIsEditMode) => !prevIsEditMode);
     setSelectedIds(new Set());
@@ -35,6 +37,7 @@ function App() {
         selectedIds.has(user.id),
       );
 
+      // Generating a unique ID (timestamp + random number) to prevent duplicate React keys
       const duplicatedUsers = usersToDuplicate.map((user) => ({
         ...user,
         id: Date.now() + Math.random(),
@@ -66,12 +69,14 @@ function App() {
           <EditModeToggle isEditMode={isEditMode} onToggle={toggleEditMode} />
         </div>
 
+        {/* Load, Error, and Empty Result States*/}
         {isLoading && <p>Chargement...</p>}
         {error && <p role="alert">{error}</p>}
         {!isLoading && !error && query.trim() !== "" && users.length === 0 && (
           <p>Aucun résultat trouvé.</p>
         )}
 
+        {/* Bonus: Complete removal of the bar outside of edit mode for the accessibility tree */}
         {isEditMode && (
           <SelectionBar
             selectedCount={selectedIds.size}

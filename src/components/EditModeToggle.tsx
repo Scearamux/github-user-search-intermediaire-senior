@@ -5,6 +5,7 @@ interface EditModeToggleProps {
   onToggle: () => void;
 }
 
+// Edit mode toggle button `aria-pressed` serves both accessibility purposes and as a CSS state selector
 function EditModeToggle({ isEditMode, onToggle }: EditModeToggleProps) {
   return (
     <button

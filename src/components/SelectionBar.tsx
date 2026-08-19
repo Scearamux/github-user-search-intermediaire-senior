@@ -8,6 +8,8 @@ interface SelectionBarProps {
   onDelete: () => void;
 }
 
+// Action bar (global selection, counter, and edit buttons)
+// Only accepts `selectedCount` to avoid unnecessary coupling with the Set
 function SelectionBar({
   selectedCount,
   areAllSelected,
@@ -26,6 +28,7 @@ function SelectionBar({
         {selectedCount} elements selected
       </label>
 
+      {/* The buttons remain visible but are disabled to preserve the layout*/}
       <div className="selection-bar__actions">
         <button
           type="button"

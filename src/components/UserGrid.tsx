@@ -9,6 +9,7 @@ interface UserGridProps {
   onToggleSelect: (id: number) => void;
 }
 
+// User card grid. The `selectedIds.has(user.id)` selection test runs in O(1) during the map operation
 function UserGrid({
   users,
   selectedIds,
@@ -16,8 +17,10 @@ function UserGrid({
   onToggleSelect,
 }: UserGridProps) {
   return (
+    // Main container managing the application's scrolling
     <div className="user-grid-container">
       <div className="user-grid">
+        {/* `key={user.id}` is required to prevent DOM reuse errors after deleting */}
         {users.map((user) => (
           <UserCard
             key={user.id}

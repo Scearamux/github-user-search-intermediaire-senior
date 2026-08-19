@@ -5,6 +5,7 @@ interface SearchBarProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+// Controlled search field, no form or button live input is handled by the debounce in the hook
 function SearchBar({ value, onChange }: SearchBarProps) {
   return (
     <div className="search-bar">

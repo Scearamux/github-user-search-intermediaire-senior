@@ -8,6 +8,7 @@ interface UserCardProps {
   onToggleSelect: (id: number) => void;
 }
 
+// User Card
 function UserCard({
   user,
   isSelected,
@@ -16,6 +17,7 @@ function UserCard({
 }: UserCardProps) {
   return (
     <div className="user-card">
+      {/* `aria-label` provides the label that is essential for screen readers*/}
       {isEditMode && (
         <input
           type="checkbox"
@@ -30,6 +32,7 @@ function UserCard({
         alt={`Avatar de ${user.login}`}
         className="user-card__avatar"
       />
+      {/* Math.floor: ensures that an integer is displayed if the ID was generated on the front end */}
       <p className="user-card__id">{Math.floor(user.id)}</p>
       <p className="user-card__login">{user.login}</p>
       <a
