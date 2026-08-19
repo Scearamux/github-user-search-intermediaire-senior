@@ -13,11 +13,14 @@ Real-time GitHub user search (no button, no Enter key required), with multi-sele
 ```bash
 npm install
 npm run dev
-npm test
-npm run test:watch
-npm run build
-npm run lint
 ```
+
+| Command | Purpose |
+| --- | --- |
+| `npm test` | Test suite (36 tests) |
+| `npm run test:watch` | Tests in watch mode |
+| `npm run build` | Type check + production build |
+| `npm run lint` | ESLint |
 
 > The GitHub search API is capped at **10 requests per minute** without authentication. Under heavy manual testing the app will show its rate-limit message until the quota resets.
 
@@ -52,7 +55,7 @@ npm run lint
 
 **How it was used**
 
-The first working version was written by hand: API call, edge-case handling, selection, bulk actions and layout. From there the assistant was used on four fronts:
+The first working version was written by hand: API call, edge-case handling, selection, bulk actions and layout. From there the assistant was used on three fronts:
 
 1. **TypeScript support.** This was the starting point: I had not written TypeScript for a while, and the assistant acted as an active refresher on typing props, custom hooks and API responses, rather than looking each piece of syntax up in the docs.
 2. **Tests.** The test suite was written with the assistant, driven by the edge cases the brief requires.
