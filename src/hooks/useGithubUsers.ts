@@ -10,14 +10,22 @@ export function useGithubUsers(query: string) {
   const [users, setUsers] = useState<GithubUser[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  // difference between “0 API results” and manually deleting all cards
+  const [totalCount, setTotalCount] = useState<number | null>(null);
+  const [lastQuery, setLastQuery] = useState<string>(query);
 
-  useEffect(() => {
-    // Empty input: reset to preserve the API quota.
+  // Reset during rendering if the collection is emptied (prevents a re-render via useEffect)
+  if (lastQuery !== query) {
+    setLastQuery(query);
     if (query.trim() === "") {
       setUsers([]);
       setError("");
-      return;
+      setTotalCount(null);
     }
+  }
+
+  useEffect(() => {
+    if (query.trim() === "") return;
 
     const controller = new AbortController();
 
@@ -43,12 +51,14 @@ export function useGithubUsers(query: string) {
         })
         .then((data: GithubSearchResponse) => {
           setUsers(data.items);
+          setTotalCount(data.total_count);
         })
         .catch((err: Error) => {
           // Ignore the error if the request was intentionally canceled
           if (err.name === "AbortError") return;
           setError(err.message);
           setUsers([]);
+          setTotalCount(null);
         })
         .finally(() => {
           setIsLoading(false);
@@ -62,5 +72,5 @@ export function useGithubUsers(query: string) {
     };
   }, [query]);
 
-  return { users, setUsers, isLoading, error };
+  return { users, setUsers, isLoading, error, totalCount };
 }

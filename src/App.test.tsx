@@ -47,7 +47,7 @@ const cards = () => screen.queryAllByRole("link", { name: "View profile" });
 
 beforeEach(() => {
   vi.useFakeTimers();
-  fetchMock = vi.fn().mockResolvedValue(response({ items: users }));
+  fetchMock = vi.fn().mockResolvedValue(response({ items: users, total_count: users.length }));
   vi.stubGlobal("fetch", fetchMock);
 });
 
@@ -132,8 +132,25 @@ describe("App", () => {
     expect(screen.getByText(/0 elements selected/)).toBeInTheDocument();
   });
 
+  // Regression: the empty-state message is driven by the API count, not by
+  // `users.length`. Deleting every card is not the same as finding nothing.
+  it("n'annonce pas l'absence de résultat après suppression de toutes les cartes", async () => {
+    render(<App />);
+    await search("torvalds");
+    enterEditMode();
+
+    // The "select all" checkbox is named by its wrapping label ("0 elements selected").
+    fireEvent.click(screen.getByRole("checkbox", { name: /elements selected/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Supprimer la sélection" }),
+    );
+
+    expect(cards()).toHaveLength(0);
+    expect(screen.queryByText(/Aucun résultat trouvé/i)).not.toBeInTheDocument();
+  });
+
   it("annonce l'absence de résultat", async () => {
-    fetchMock.mockResolvedValue(response({ items: [] }));
+    fetchMock.mockResolvedValue(response({ items: [], total_count: 0 }));
 
     render(<App />);
     await search("zzzzzzzz");

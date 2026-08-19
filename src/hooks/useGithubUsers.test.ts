@@ -38,7 +38,7 @@ function renderHookWithQuery(query: string) {
 
 beforeEach(() => {
   vi.useFakeTimers();
-  fetchMock = vi.fn().mockResolvedValue(response({ items: [torvalds] }));
+  fetchMock = vi.fn().mockResolvedValue(response({ items: [torvalds], total_count: 1 }));
   vi.stubGlobal("fetch", fetchMock);
 });
 
@@ -90,7 +90,7 @@ describe("useGithubUsers", () => {
 
   // Boundary case required by the problem statement: no result
   it("renvoie une liste vide quand l'API ne trouve personne", async () => {
-    fetchMock.mockResolvedValue(response({ items: [] }));
+    fetchMock.mockResolvedValue(response({ items: [], total_count: 0 }));
 
     const { result } = renderHookWithQuery("zzzzzzzzzz");
     await runDebounce();

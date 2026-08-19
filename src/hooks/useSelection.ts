@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { GithubUser } from "../types/github";
 
 // Handling multiple selections.
@@ -7,11 +7,13 @@ import type { GithubUser } from "../types/github";
 
 export function useSelection(users: GithubUser[], query: string) {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [lastQuery, setLastQuery] = useState<string>(query);
 
-  // reset when the query changes to prevent actions on obsolete elements during the search debounce
-  useEffect(() => {
+  // Synchronous reset when the query changes to prevent intermediate renderings with an outdated selection
+  if (lastQuery !== query) {
+    setLastQuery(query);
     setSelectedIds(new Set());
-  }, [query]);
+  }
 
   // Copy of the set required to force React to re-render
   const toggleSelect = (id: number) => {

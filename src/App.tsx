@@ -12,7 +12,8 @@ function App() {
   const [query, setQuery] = useState<string>("");
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
-  const { users, setUsers, isLoading, error } = useGithubUsers(query);
+  const { users, setUsers, isLoading, error, totalCount } =
+    useGithubUsers(query);
   const {
     selectedIds,
     setSelectedIds,
@@ -72,7 +73,9 @@ function App() {
         {/* Load, Error, and Empty Result States*/}
         {isLoading && <p>Chargement...</p>}
         {error && <p role="alert">{error}</p>}
-        {!isLoading && !error && query.trim() !== "" && users.length === 0 && (
+        {/* Driven by the API count, not by `users.length`: emptying the grid
+            with the delete action must not be reported as "no results" */}
+        {!isLoading && !error && totalCount === 0 && (
           <p>Aucun résultat trouvé.</p>
         )}
 
