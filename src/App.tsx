@@ -14,53 +14,6 @@ function App() {
     setQuery(event.target.value);
   };
 
-  const toggleSelect = (id: number) => {
-    setSelectedIds((prevSelectedIds) => {
-      const newSelectedIds = new Set(prevSelectedIds);
-      if (newSelectedIds.has(id)) {
-        newSelectedIds.delete(id);
-      } else {
-        newSelectedIds.add(id);
-      }
-      return newSelectedIds;
-    });
-  };
-
-  const areAllSelected = users.length > 0 && selectedIds.size === users.length;
-
-  const toggleSelectAll = () => {
-    if (areAllSelected) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(users.map((user) => user.id)));
-    }
-  };
-
-  const duplicateSelected = () => {
-    setUsers((prevUsers) => {
-      const usersToDuplicate = prevUsers.filter((user) =>
-        selectedIds.has(user.id),
-      );
-
-      const duplicatedUsers = usersToDuplicate.map((user) => ({
-        ...user,
-        id: Date.now() + Math.random(),
-      }));
-
-      return [...prevUsers, ...duplicatedUsers];
-    });
-
-    setSelectedIds(new Set());
-  };
-
-  const deleteSelected = () => {
-    setUsers((prevUsers) =>
-      prevUsers.filter((user) => !selectedIds.has(user.id)),
-    );
-
-    setSelectedIds(new Set());
-  };
-
   useEffect(() => {
     setSelectedIds(new Set());
 
@@ -112,59 +65,118 @@ function App() {
     };
   }, [query]);
 
-  return (
-    <div>
-      <h1>Github User Search</h1>
-      <input
-        type="text"
-        value={query}
-        onChange={handleChange}
-        placeholder="Rechercher un utilisateur Github..."
-      />
-      {isLoading && <p>Chargement...</p>}
-      {error && <p role="alert">{error}</p>}
-      {!isLoading && !error && query.trim() !== "" && users.length === 0 && (
-        <p>Aucun résultat trouvé.</p>
-      )}
-      <div className="selection-bar">
-        <label>
-          <input
-            type="checkbox"
-            checked={areAllSelected}
-            onChange={toggleSelectAll}
-          />
-          {selectedIds.size} elements selected
-        </label>
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prevSelectedIds) => {
+      const newSelectedIds = new Set(prevSelectedIds);
+      if (newSelectedIds.has(id)) {
+        newSelectedIds.delete(id);
+      } else {
+        newSelectedIds.add(id);
+      }
+      return newSelectedIds;
+    });
+  };
 
-        <div className="selection-bar__actions">
-          <button
-            type="button"
-            onClick={duplicateSelected}
-            disabled={selectedIds.size === 0}
-            aria-label="Dupliquer la sélection"
-          >
-            ⧉
-          </button>
-          <button
-            type="button"
-            onClick={deleteSelected}
-            disabled={selectedIds.size === 0}
-            aria-label="Supprimer la sélection"
-          >
-            🗑
-          </button>
-        </div>
-      </div>
-      <div className="user-grid">
-        {users.map((user) => (
-          <UserCard
-            key={user.id}
-            user={user}
-            isSelected={selectedIds.has(user.id)}
-            onToggleSelect={toggleSelect}
+  const areAllSelected = users.length > 0 && selectedIds.size === users.length;
+
+  const toggleSelectAll = () => {
+    if (areAllSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(users.map((user) => user.id)));
+    }
+  };
+
+  const duplicateSelected = () => {
+    setUsers((prevUsers) => {
+      const usersToDuplicate = prevUsers.filter((user) =>
+        selectedIds.has(user.id),
+      );
+
+      const duplicatedUsers = usersToDuplicate.map((user) => ({
+        ...user,
+        id: Date.now() + Math.random(),
+      }));
+
+      return [...prevUsers, ...duplicatedUsers];
+    });
+
+    setSelectedIds(new Set());
+  };
+
+  const deleteSelected = () => {
+    setUsers((prevUsers) =>
+      prevUsers.filter((user) => !selectedIds.has(user.id)),
+    );
+
+    setSelectedIds(new Set());
+  };
+
+  return (
+    <div className="app">
+      <header className="app-header">
+        <h1>Github Search</h1>
+      </header>
+
+      <main className="app-main">
+        <div className="search-bar">
+          <input
+            type="text"
+            value={query}
+            onChange={handleChange}
+            placeholder="Rechercher un utilisateur Github..."
           />
-        ))}
-      </div>
+        </div>
+
+        {isLoading && <p>Chargement...</p>}
+        {error && <p role="alert">{error}</p>}
+        {!isLoading && !error && query.trim() !== "" && users.length === 0 && (
+          <p>Aucun résultat trouvé.</p>
+        )}
+
+        <div className="selection-bar">
+          <label>
+            <input
+              type="checkbox"
+              checked={areAllSelected}
+              onChange={toggleSelectAll}
+            />
+            {selectedIds.size} elements selected
+          </label>
+
+          <div className="selection-bar__actions">
+            <button
+              type="button"
+              onClick={duplicateSelected}
+              disabled={selectedIds.size === 0}
+              aria-label="Dupliquer la sélection"
+            >
+              <span className="material-symbols-outlined">content_copy</span>
+            </button>
+            <button
+              type="button"
+              onClick={deleteSelected}
+              disabled={selectedIds.size === 0}
+              aria-label="Supprimer la sélection"
+            >
+              <span className="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="user-grid-container">
+          <div className="user-grid">
+            {users.map((user) => (
+              <UserCard
+                key={user.id}
+                user={user}
+                isSelected={selectedIds.has(user.id)}
+                onToggleSelect={toggleSelect}
+              />
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
