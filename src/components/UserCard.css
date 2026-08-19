@@ -1,0 +1,56 @@
+.user-card {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100px;
+  padding: 16px 8px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.user-card__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #4dd0c4, #2e8b8b);
+}
+
+.user-card__id {
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.user-card__login {
+  font-size: 0.8rem;
+  color: #444;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.user-card__link {
+  text-decoration: none;
+  background: #4a9eff;
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 8px 4px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.user-card__link:hover {
+  background: #3a8ceb;
+}
