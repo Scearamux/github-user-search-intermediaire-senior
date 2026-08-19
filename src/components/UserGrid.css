@@ -1,0 +1,12 @@
+.user-grid-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px);
+  gap: 16px;
+  justify-content: center;
+}
