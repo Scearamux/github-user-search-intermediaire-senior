@@ -1,0 +1,34 @@
+.edit-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  height: 48px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  font-family: inherit;
+  color: #444;
+  background: #d5d5d5;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.edit-mode-toggle:hover {
+  background: #c8c8c8;
+}
+
+.edit-mode-toggle[aria-pressed="true"] {
+  background: #4a9eff;
+  border-color: #4a9eff;
+  color: white;
+}
+
+.edit-mode-toggle[aria-pressed="true"]:hover {
+  background: #3a8ceb;
+}
+
+.edit-mode-toggle .material-symbols-outlined {
+  font-size: 18px;
+}

@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useGithubUsers } from "./hooks/useGithubUsers";
 import { useSelection } from "./hooks/useSelection";
 import SearchBar from "./components/SearchBar";
+import EditModeToggle from "./components/EditModeToggle";
 import SelectionBar from "./components/SelectionBar";
 import UserGrid from "./components/UserGrid";
 import "./App.css";
 
 function App() {
   const [query, setQuery] = useState<string>("");
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const { users, setUsers, isLoading, error } = useGithubUsers(query);
   const {
@@ -20,6 +22,11 @@ function App() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
+  };
+
+  const toggleEditMode = () => {
+    setIsEditMode((prevIsEditMode) => !prevIsEditMode);
+    setSelectedIds(new Set());
   };
 
   const duplicateSelected = () => {
@@ -54,7 +61,10 @@ function App() {
       </header>
 
       <main className="app-main">
-        <SearchBar value={query} onChange={handleChange} />
+        <div className="app-toolbar">
+          <SearchBar value={query} onChange={handleChange} />
+          <EditModeToggle isEditMode={isEditMode} onToggle={toggleEditMode} />
+        </div>
 
         {isLoading && <p>Chargement...</p>}
         {error && <p role="alert">{error}</p>}
@@ -62,17 +72,20 @@ function App() {
           <p>Aucun résultat trouvé.</p>
         )}
 
-        <SelectionBar
-          selectedCount={selectedIds.size}
-          areAllSelected={areAllSelected}
-          onToggleSelectAll={toggleSelectAll}
-          onDuplicate={duplicateSelected}
-          onDelete={deleteSelected}
-        />
+        {isEditMode && (
+          <SelectionBar
+            selectedCount={selectedIds.size}
+            areAllSelected={areAllSelected}
+            onToggleSelectAll={toggleSelectAll}
+            onDuplicate={duplicateSelected}
+            onDelete={deleteSelected}
+          />
+        )}
 
         <UserGrid
           users={users}
           selectedIds={selectedIds}
+          isEditMode={isEditMode}
           onToggleSelect={toggleSelect}
         />
       </main>
